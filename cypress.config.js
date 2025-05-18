@@ -1,5 +1,5 @@
 const { defineConfig } = require('cypress')
-const fs = require('fs')
+//onst fs = require('fs')
 
 module.exports = defineConfig({
   e2e: {
@@ -21,7 +21,6 @@ module.exports = defineConfig({
   },
   reporter: 'cypress-mochawesome-reporter',
   reporterOptions: {
-    reportDir: 'cypress/results',
     overwrite: false,
     html: false,
     json: true,
