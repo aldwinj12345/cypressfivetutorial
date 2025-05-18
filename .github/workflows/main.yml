@@ -26,15 +26,15 @@ jobs:
           browsers: ${{ matrix.browsers }}
           command: npx cypress run --browser ${{ matrix.browsers }} --reporter mochawesome --reporter-options reportDir=cypress/reports/${{ matrix.browsers }},overwrite=false,json=true
 
-      - name: Merge Mochawesome Reports
+      - name: Merge Mochawesome Reports for ${{ matrix.browsers }}
         if: always()
         run: npx mochawesome-merge "cypress/reports/${{ matrix.browsers }}/*.json" > cypress/reports/${{ matrix.browsers }}/merged-reports.json
 
-      - name: Generate HTML Report
+      - name: Generate HTML Report for ${{ matrix.browsers }}
         if: always()
         run: npx marge "cypress/reports/${{ matrix.browsers }}/merged-reports.json" --reportDir "cypress/reports/${{ matrix.browsers }}" -f "${{ matrix.browsers }}-report.html"
 
-      - name: Upload HTML Report
+      - name: Upload HTML Report for ${{ matrix.browsers }}
         if: always()
         uses: actions/upload-artifact@v4
         with:
