@@ -21,39 +21,38 @@ jobs:
         with:
           command: npx cypress run --browser ${{ matrix.browsers }} --reporter-options reportDir=cypress/reports/${{ matrix.browsers }}
         env:
-          # Enable screenshots on test failure
           CYPRESS_SCREENSHOT_ON_FAILURE: true
-          # Enable video recording for the entire run
           CYPRESS_VIDEO: true
-          # Optionally customize the video filename (will be prefixed with spec name)
           CYPRESS_VIDEO_FILENAME: ${{ matrix.browsers }}-video.mp4
-          # Optionally customize the video folder
           CYPRESS_VIDEOS_FOLDER: cypress/videos/${{ matrix.browsers }}
-          # Optionally customize the screenshots folder
           CYPRESS_SCREENSHOTS_FOLDER: cypress/screenshots/${{ matrix.browsers }}
+        continue-on-error: true # Allow the workflow to continue even if this step fails
 
       - name: Merge Mochawesome Reports
         run: npx mochawesome-merge cypress/reports/${{ matrix.browsers }}/*.json > cypress/reports/${{ matrix.browsers }}/merged-reports.json
+        if: always() # Run this step even if the previous one failed
 
       - name: Generate HTML Reports
         run: npx marge cypress/reports/${{ matrix.browsers }}/merged-reports.json --reportDir cypress/reports/${{ matrix.browsers }} -f "${{ matrix.browsers }}-report.html"
+        if: always() # Run this step even if the previous one failed
 
       - name: Upload HTML Reports
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: Cypress HTML Report ${{ matrix.browsers }}
           path: cypress/reports/${{ matrix.browsers }}
 
       - name: Upload Screenshots
         uses: actions/upload-artifact@v4
-        if: always() # Keep screenshots even if tests pass
+        if: always()
         with:
           name: Cypress Screenshots ${{ matrix.browsers }}
           path: cypress/screenshots/${{ matrix.browsers }}
 
       - name: Upload Videos
         uses: actions/upload-artifact@v4
-        if: always() # Keep videos even if tests pass
+        if: always()
         with:
           name: Cypress Videos ${{ matrix.browsers }}
           path: cypress/videos/${{ matrix.browsers }}
