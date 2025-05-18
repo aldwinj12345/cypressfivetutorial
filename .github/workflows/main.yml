@@ -21,8 +21,14 @@ jobs:
                   command: npx cypress run --browser ${{ matrix.browsers }} --reporter-options reportDir=cypress/reports/${{ matrix.browsers }}
               - name: Wait for Reports
                 run: sleep 5 # Wait 5 seconds to ensure reports are written
-              - name: Upload Raw Mochawesome Reports
+              - name: Merge Mochawesome Reports
+                run: npx mochawesome-merge cypress/reports/${{ matrix.browsers }}/*.json > cypress/reports/${{ matrix.browsers }}/merged-reports.json
+
+              - name: Generate HTML Reports
+                run: npx marge cypress/reports/${{ matrix.browsers }}/merged-reports.json --reportDir cypress/reports/${{ matrix.browsers }} -f "${{ matrix.browsers }}-report.html"
+        
+              - name: Upload HTML Reports
                 uses: actions/upload-artifact@v4
                 with:
-                  name: mochawesome-raw-reports-${{ matrix.browsers }}
-                  path: cypress/reports/${{ matrix.browsers }}/*.json
+                    name: Cypress HTML Report ${{ matrix.browsers }}
+                    path: cypress/reports/${{ matrix.browsers }}
