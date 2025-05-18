@@ -6,7 +6,7 @@ module.exports = defineConfig({
       require('cypress-mochawesome-reporter/plugin')(on);
     },
   },
-  reporter: 'cypressmochawesomereporter',
+  reporter: 'mochawesome',
   reporterOptions: {
     overwrite: false,
     html: false,
