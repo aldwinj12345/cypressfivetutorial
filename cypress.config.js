@@ -4,7 +4,7 @@ const { defineConfig } = require('cypress')
 module.exports = defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
-      //require('cypress-mochawesome-reporter/plugin')(on);
+      require('cypress-mochawesome-reporter/plugin')(on);
       // on('after:spec', (spec, results) => {
       //   if (results && results.video) {
       //     // Do we have failures for any retry attempts?
