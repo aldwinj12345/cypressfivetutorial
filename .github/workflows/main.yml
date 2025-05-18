@@ -5,6 +5,11 @@ on: push
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
+    strategy:
+        fail-fast: false
+        matrix:
+            browsers: [chrome, firefox, edge]
+            
     steps:
       - name: Checkout
         uses: actions/checkout@v4
