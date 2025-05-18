@@ -6,7 +6,7 @@ on:
 
 jobs:
   cypress-run:
-            runs-on: ubuntu-latest
+            runs-on: ubuntu-24.04
             strategy:
               fail-fast: false
               matrix:
@@ -14,13 +14,13 @@ jobs:
             steps:
               - name: Checkout
                 uses: actions/checkout@v4
+                
               - name: Cypress run in ${{ matrix.browsers }}
                 uses: cypress-io/github-action@v6
                 with:
                   browser: ${{ matrix.browsers }}
                   command: npx cypress run --browser ${{ matrix.browsers }} --reporter-options reportDir=cypress/reports/${{ matrix.browsers }}
-              - name: Wait for Reports
-                run: sleep 5 # Wait 5 seconds to ensure reports are written
+           
               - name: Merge Mochawesome Reports
                 run: npx mochawesome-merge cypress/reports/${{ matrix.browsers }}/*.json > cypress/reports/${{ matrix.browsers }}/merged-reports.json
 
