@@ -20,16 +20,17 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           command: npx cypress run --browser ${{ matrix.browsers }} --reporter-options reportDir=cypress/reports/${{ matrix.browsers }}
+        env:
           # Enable screenshots on test failure
-          screenshot: true
+          CYPRESS_SCREENSHOT_ON_FAILURE: true
           # Enable video recording for the entire run
-          video: true
-          # Optionally customize the video filename
-          videoFilename: ${{ matrix.browsers }}-video.mp4
+          CYPRESS_VIDEO: true
+          # Optionally customize the video filename (will be prefixed with spec name)
+          CYPRESS_VIDEO_FILENAME: ${{ matrix.browsers }}-video.mp4
           # Optionally customize the video folder
-          videosFolder: cypress/videos/${{ matrix.browsers }}
+          CYPRESS_VIDEOS_FOLDER: cypress/videos/${{ matrix.browsers }}
           # Optionally customize the screenshots folder
-          screenshotsFolder: cypress/screenshots/${{ matrix.browsers }}
+          CYPRESS_SCREENSHOTS_FOLDER: cypress/screenshots/${{ matrix.browsers }}
 
       - name: Merge Mochawesome Reports
         run: npx mochawesome-merge cypress/reports/${{ matrix.browsers }}/*.json > cypress/reports/${{ matrix.browsers }}/merged-reports.json
