@@ -27,7 +27,7 @@ jobs:
           command: npx cypress run --browser ${{ matrix.browsers }} --reporter mochawesome --reporter-options reportDir=cypress/reports/${{ matrix.browsers }},overwrite=false,json=true
 
       - name: Merge Mochawesome Reports ${{ matrix.browsers }}
-        if: always() # Ensure this step runs even if Cypress tests fail for a browser
+        if: always()
         run: npx mochawesome-merge "cypress/reports/${{ matrix.browsers }}/*.json" > cypress/reports/${{ matrix.browsers }}/merged-reports.json
 
       - name: Generate HTML Report ${{ matrix.browsers }}
