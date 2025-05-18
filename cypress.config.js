@@ -2,10 +2,6 @@ const { defineConfig } = require('cypress')
 const fs = require('fs')
 
 module.exports = defineConfig({
-  reporter: 'cypress-mochawesome-reporter',
-  // setupNodeEvents can be defined in either
-  // the e2e or component configuration
-  video : true,
   e2e: {
     setupNodeEvents(on, config) {
       require('cypress-mochawesome-reporter/plugin')(on);
@@ -23,4 +19,16 @@ module.exports = defineConfig({
       })
     },
   },
+  reporter: 'cypress-mochawesome-reporter',
+  reporterOptions: {
+    reportDir: 'cypress/results',
+    overwrite: false,
+    html: false,
+    json: true,
+  },
+  retries: {
+      runMode: 2,
+      openMode: 0,
+    },
+  video : true,
 })
