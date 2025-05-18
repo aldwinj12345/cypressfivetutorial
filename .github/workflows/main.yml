@@ -6,50 +6,23 @@ on:
 
 jobs:
   cypress-run:
-    runs-on: ubuntu-24.04
-    strategy:
-        fail-fast: false
-        matrix:
-            browsers: [chrome, firefox, edge]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      # Install npm dependencies, cache them correctly
-      # and run all Cypress tests
-      - name: Cypress run in ${{ matrix.browsers }}
-        uses: cypress-io/github-action@v6
-        with:
-          browser: ${{ matrix.browsers }}
-          command: npx cypress run --browser ${{ matrix.browsers }} --reporter-options reportDir=cypress/reports/${{ matrix.browsers }}
-      - name: Upload Raw Mochawesome Reports
-        uses: actions/upload-artifact@v4
-        with:
-          name: mochawesome-raw-reports-${{ matrix.browsers }}
-          path: cypress/reports/${{ matrix.browsers }}/*.json
-
-  merge-reports:
-    needs: cypress-run
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Download Raw Reports
-        uses: actions/download-artifact@v4
-        with:
-          pattern: mochawesome-raw-reports-*
-          path: cypress/reports
-      - name: Create Report Directory
-        run: mkdir -p cypress/reports
-      - name: Install Dependencies
-        run: npm install mochawesome-merge
-      - name: Set Execute Permissions
-        run: chmod +x ./node_modules/.bin/mochawesome-merge
-      - name: Merge Mochawesome Reports
-        run: ./node_modules/.bin/mochawesome-merge "cypress/reports/**/*.json" > "cypress/reports/merged-reports.json"
-      - name: Generate HTML Report
-        run: npx marge "cypress/reports/merged-reports.json" --reportDir "cypress/reports" -f "merged-report.html"
-      - name: Upload HTML Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: Cypress Merged HTML Report
-          path: cypress/reports/merged-report.html
+            runs-on: ubuntu-latest
+            strategy:
+              fail-fast: false
+              matrix:
+                browsers: [chrome, firefox, edge]
+            steps:
+              - name: Checkout
+                uses: actions/checkout@v4
+              - name: Cypress run in ${{ matrix.browsers }}
+                uses: cypress-io/github-action@v6
+                with:
+                  browser: ${{ matrix.browsers }}
+                  command: npx cypress run --browser ${{ matrix.browsers }} --reporter-options reportDir=cypress/reports/${{ matrix.browsers }}
+              - name: Wait for Reports
+                run: sleep 5 # Wait 5 seconds to ensure reports are written
+              - name: Upload Raw Mochawesome Reports
+                uses: actions/upload-artifact@v4
+                with:
+                  name: mochawesome-raw-reports-${{ matrix.browsers }}
+                  path: cypress/reports/${{ matrix.browsers }}/*.json
